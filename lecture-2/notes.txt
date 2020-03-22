@@ -183,5 +183,42 @@ Grep examples
   $ grep -R foobar .
 
 More
+  # using ripgrep (fast, colorcoding, unicode support)
   # where i use request library in the 'grandparent' folder
   $ rg "import requests" -t py ../..
+
+  # include 5 lines of context
+  $ rg "import requests" -t py -C 5 ../..
+
+  # -u   <-- don't ignore hidden files
+  # --files-without-match   <-- print all files that don't match "^#/!"
+  # "^#/!" <-- regex means beginning of line has a \ and !
+  # only .sh files
+  $ rg -u --files-without-match "^#\!" -t sh
+
+  # include 5 lines of context
+  $ rg "import requests" -t py -C 5 --stats ../..
+  93 matches
+  93 matched lines
+  71 files contained matches
+  3037 files searched
+  35766 bytes printed
+  34122371 bytes searched
+  1.407410 seconds spent searching
+  0.654827 seconds
+
+
+** VALUABLE **
+q: How do you go about finding commands that you already figured out?
+
+  $ history
+  CTRL + R  <-- backwards search
+
+  $ fzf
+
+
+Tools to do quick directory listing/navigation
+  $ ls -R
+  $ tree
+  $ broot
+  $ nnn
