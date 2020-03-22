@@ -1,0 +1,187 @@
+
+
+
+Title: Shell Tools & Scripting
+
+- - -
+Random thought before lecture started - how to show linux command history
+  $ history | tail -[number of lines]
+- - -
+
+Bash Basics
+
+Be very careful with spaces (separate arguments to a command)
+Example
+  $ foo=bar
+  $ echo $foo
+  bar
+  $ foo = bar
+  zsh: command not found: foo
+
+Strings in bash
+  - can use double quotes or single quotes
+  - not equivalent outside of string literals
+Example
+ $ echo  "Value is $foo"
+ Value is bar
+ $ echo 'Value is $foo'
+ Value is $foo
+
+Ability to define functions, control flow, etc.
+
+Example Bash Script
+$ vim mcd.sh
+mcd (){
+    mkdir -p "$1"
+    cd "$1"
+}
+$ source mcd.sh
+$ mcd test
+/test $ ...
+
+RESERVED
+$0      - name of script
+$1-9    - first through ninth arguments
+$?      - error code from previous command
+$_      - last argument of the previous command
+!!      - 'bang bang' (previous command)
+
+Random
+||      - execute first, if that doesn't work, execute second.
+$ false || echo "Oops fail"
+Oops fail
+$ true || echo "Oops fail"
+$
+
+&&      - only execute second part if first one runs w/o errors.
+$ true && echo "Things went well"
+Things went well
+$ false && echo "No print"
+$
+
+;       - will always print (concat to first regardless if error)
+$ false ; echo "This will always print"
+This will always print
+
+
+
+How do you get the output of a command into a variable?
+$ foo=$(pwd)
+
+Common Substitution
+$ echo "We are in $(pwd)"
+We are in /Users/michaelhegelheimer/_projects/missing-mit/lecture-2
+
+Process Substitution
+notes: put ls into temporary file(s) and concat together
+$ cat <(ls) <(ls ..)
+
+
+See example.sh
+
+
+q: Is there a way to give arguments more succinctly?
+a: Globbing
+
+# match any sort of characters that end up with '.sh'
+$ ls *.sh
+
+# ? represents on ly a single character
+$ ls project?.old
+
+Globbing can be very powerful - for example by combining
+$ convert image.png image.jpg
+or
+# expands the line
+$ convert image.{png, jpg}
+
+$ touch foo{,1,3,10}
+becomes
+$ touch foo foo1 foo2 foo10
+
+$ cp project{1,2
+$ project{1,2}/src/test/test{1,2,3}.py
+expands to (cartesian product of these 2 expansions)
+$ project1/src/test/test1.py project1/src/test/test2.py ...
+
+$ mkdir foo bar
+$ touch {foo,bar}/{a..j}
+
+# create difference in the folders
+$ touch foo/x bar/y
+
+# use of earlier command to identify differences
+# 'x' is only in first folder
+# 'y' is only in second folder
+$ difdf <(ls foo) <(ls bar)
+11c11
+< x
+---
+> y
+
+
+See 'script.py'
+
+
+Note: bash is not modern and was developed a while ago.  sometime it is
+      hard to debug.
+
+# can be installed with HomeBrew
+$ shellcheck <bashscript>.sh
+
+When writing bash scripts or functions, there is a difference in writing them
+in isolation and as something that'll be loaded into your shell.
+
+** The man command
+
+tldr, convert, ffmpeg
+
+Recommended installs: rg, tldr, fd
+
+random question: zip vs tar
+
+
+Finding files:
+  Instead of ls'ing
+
+  # find  <-- program
+  # .     <-- current folder
+  # -name <-- fname is src
+  # -type <-- type is directory
+  $ find . -name src -type d
+
+  # find  <-- program
+  # -path <-- ** some number of folders, *.py all python scripts
+  # -type <-- file
+  $ find . -path '**/test/*.py' -type f
+
+  # find   <-- program
+  # -mtime <-- modified time (modified in the last day)
+  $ find . -mtime -1
+
+The 'find' program can also do things on top of finding stuff
+  $ find . -name "*.tmp"
+  ./test2.tmp
+  ./test3.tmp
+  ./test1.tmp'
+
+  # remove all .tmp files in current directory
+  $ find . -name "*.tmp" -exec rm {} \;
+
+
+Note: if you perform a lot of "find"s a day, build an index using DB
+      and update
+
+# not initiated by default in OSX Catalina
+$ locate
+
+
+Grep examples
+  $ grep foobar example.sh
+
+  # grep recursive
+  $ grep -R foobar .
+
+More
+  # where i use request library in the 'grandparent' folder
+  $ rg "import requests" -t py ../..

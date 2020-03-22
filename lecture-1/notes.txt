@@ -1,0 +1,79 @@
+
+
+Title: Course Overview & The Shell
+
+Shell --> is needed to do things past basic functionality provided in UI
+
+Example programs:
+  date
+  echo
+
+
+'\' to allow spaces, otherwise spaces will separate arguments
+
+q: What is a path?
+a: A way to name the location of a file on the computer
+
+absolute paths - fully determine the location of a file
+relative paths - relative to where you currently are in the file system
+
+pwd (PRINT WORKING DIRECTORY)
+cd (CHANGE DIRECTOR, use '-' to toggle between current and previous)
+
+Program Flags, Options
+
+More useful programs
+  mv - rename or move file
+  cp - copy/paste file
+  rm - remove a file (by default NOT RECURSIVE, pass -r flag + path)
+  rmdir - remove an empty directory
+  mkdir - make directory
+  man - manual for most programs
+
+ctrl + l = CLEAR
+
+
+Only talked about programs in isolation.  Much of the power from the shell
+comes from being able to chain programs together.  This capability is
+possible due to input and output streams.
+
+Default input  --> keyboard (terminal enter)
+Default output --> terminal (printed back to terminal)
+
+You can rewire the I/O streams:
+
+  Straightforwards way is using angle brackets <      (rewire input to be contents of this file)
+                                               >      (rewire content of this output into this file)
+                                               >>     (append to file)
+  Example
+    $ < file > file
+    $ echo hello > hello.txt
+    $ cat hello.txt
+    hello
+    $ cat < hello.txt                 # input from hello.txt
+    hello
+    $ cat < hello.txt > hello2.txt    # copy from hello.txt into hello2.txt
+                                      # use hello.txt as input
+                                      # write anything cat prints to hello2.txt
+    $ >>
+
+Gets more interesting when using |    take out put of program to left
+                                      use as input for command to right
+
+  Example
+    $ ls -l | tail -n1
+    $ ls -l | tail -n1 > ls.txt
+
+    Review
+      ls   <-- list
+      tail <-- output last line of output (-n1)
+
+    What is this doing?
+      ls and tail don't know about each other
+      they're both programmed to read I and write O
+
+    More advanced example (covered more in-depth in Data Wrangling lecture):
+    $ curl --head --silent google.com | grep -i content-length
+
+
+The root user
