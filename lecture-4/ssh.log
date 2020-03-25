@@ -1,0 +1,4 @@
+Jan 11 00:00:00 notawebsite.com sshd[20047]: Disconnected from user notch 24.61.9.143 port 52896
+Jan 11 00:00:00 notawebsite.com sshd[20047]: Disconnected from invalid user botch 24.61.9.143 port 52896
+Jan 11 00:00:00 notawebsite.com sshd[20047]: Disconnected from invalid user admin 24.61.9.143 port 52896 [preauth]
+Jan 11 00:00:00 notawebsite.com sshd[20047]: Disconnected from authenticating user root 24.61.9.143 port 52896 [preauth]

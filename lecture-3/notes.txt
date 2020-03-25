@@ -1,0 +1,58 @@
+
+
+
+Title: Editors (vim)
+
+Overview
+  - teach core philosophies of vim
+  - basics (open file, close file, make edits, etc.)
+
+Main Ideas
+  1. Vim is a Modal Editor (has multiple operating modes)
+    - This comes from the concept that when you're programming you're performing
+    different functions (editing small, big dump, reading, etc.)
+    - When you start vim up it starts in 'normal' mode
+    - There are different key combinations that switch you between modes
+    - spend most of time between Normal and Insert Mode
+      - normal --> insert, press i
+      - insert --> normal, press esc
+    - Notations
+      -  Control + V written as '^V', 'Ctrl-V' or '<C-V>'
+
+  VIM MODES
+    normal        - base
+    insert        - i
+    replace       - R
+    visual        - v
+    visual line   - shift+v
+    visual block  - ctrl+v
+    command line  - :
+
+    - from any mode back to normal mode use 'esc' key
+    - [done] typically re-bind 'Caps Lock' to 'esc' (more convenient)
+
+
+  2. Using the mouse is inefficient
+    ':' activates command line mode
+
+    Useful Vim CLI Commands
+      :q/quit
+      :w
+      :help <keystroke/command>
+
+  3. Buffers vs Windows vs Tabs
+    Vim's model of these is a bit different than other programs
+
+    'Buffers'   <--
+    'Tabs'      <--
+    'Windows'   <--
+
+    Differences:
+      - not a 1-to-1 co
+
+    Random Commands
+      :sp       <-- another buffer of same file
+      :tabnew   <-- new tab
+
+
+  4. Vim's interface itself IS A Programming Language

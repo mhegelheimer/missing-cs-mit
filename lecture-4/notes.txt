@@ -1,0 +1,115 @@
+
+
+Title: Data Wrangling
+
+Intro
+  Basic idea is taking data in one format and transforming it into a
+  different format.  Examples: converting images, text/log file into
+  graph/statistics, etc.
+
+  In order to do any data wrangling you need a data source (many good
+  candidates for data to perform operation on).  Examples in lecture
+  notes exercise section.
+
+...
+
+  Use the following to execute those pieces on the remote server
+  $ ssh tsp '<commands>'
+
+
+sed (stream editor)
+  - allows you to make changes to the contents of a stream
+  - full programming language over the stream
+  - common: run replacement expressions on an input stream
+
+  Example sed expression:
+  s                     - substitute expression
+  'Disconnected from'   - search string
+  ''                    - replacement string
+  $ cat ssh.log | sed 's/. *Disconnected from//' | less
+
+
+Regular Expressions ('disconnected from' piece in example above)
+
+  Summary
+    a very powerful way to match text
+    provides a number of characters to match a type of characters
+
+    .     - any single character
+    *     - 0 or more of that character
+    +     - 1 or more of that character
+    []    - match one of many different characters
+    ?     - 0 or 1 of a character e.g. --> (invalid )?
+
+
+    Example(s)
+
+      # replace any character that is either 'a' or 'b' with nothing
+      # by default, match the pattern and apply the replacement once (sed)
+      # 'g' modifier does this for every time it matches
+
+      $ echo 'aba' | sed 's/[ab]//'
+      ba
+      $ echo 'bba' | sed 's/[ab]//'
+      ba
+      $ echo 'bcbzac' | sed 's/[ab]//g'
+      czc
+
+
+      # 0 or more of string 'ab' and replace with nothing
+      # -E (allows support for modern version of regex - can also use
+            backslashes for parenthesis)
+
+      $ echo 'abcaba' | sed -E 's/(ab)*//g'
+      ca
+
+
+      # replace that matches 'ab' or 'bc' with nothing
+
+      $ echo 'abcababc' | sed -E 's/(ab|bc)*//g'
+      cc
+      $ echo 'abcabbc' | sed -E 's/(ab|bc)*//g'
+      c
+
+
+      # .* is greedy and will match as many as they can
+
+      $ echo 'Disconnected from invalid user Disconnected from 84.211' | sed 's/.*Disconnected from//'
+      84.211
+
+
+    Parsing the log file
+      # sample lines
+      'Jan 11 00:00:00 notawebsite.com sshd[20047]: Disconnected from user notch 24.61.9.143 port 52896'
+      'Jan 11 00:00:00 notawebsite.com sshd[20047]: Disconnected from invalid user botch 24.61.9.143 port 52896'
+      'Jan 11 00:00:00 notawebsite.com sshd[20047]: Disconnected from invalid user admin 24.61.9.143 port 52896 [preauth]'
+      'Jan 11 00:00:00 notawebsite.com sshd[20047]: Disconnected from authenticating user root 24.61.9.143 port 52896 [preauth]'
+
+      # (invalid )?     - o or 1 of 'invalid '
+      # .*              - some username
+      # [0-9.]+         - comprises ip addresses, using range syntax ('+ means many of those')
+      # [0-9]+          - comprises port
+      # the following are called 'anchoring' (necessary in the case that username is entire log string)
+      # ^               - carrot/hat matches beginning of line
+      # $               - dollar sign matches end of line
+
+      # initial
+      $ cat ssh.log | sed -E 's/^.*Disconnected from (invalid )?user .* [0-9.]+ port [0-9]+$//'
+
+      # account for 3rd & 4th cases
+      $ cat ssh.log | sed -E 's/^.*Disconnected from (invalid |authenticating )?user .* [0-9.]+ port [0-9]+( \[preauth\])?$//'
+
+
+      q: How do we remember the username (for example)
+      a: Using regex capture groups --> any parenthesis expression
+
+
+      # use capture group to retain 'username' values
+      # \2      - refer to 2nd capture group
+      $ cat ssh.log | sed -E 's/^.*Disconnected from (invalid |authenticating )?user (.*) [0-9.]+ port [0-9]+( \[preauth\])?$/\2/'
+
+
+
+This ^ is was a very complicated regular expression.
+
+In these situations, regular expression debuggers come in handy (e.g. regex101.com)
