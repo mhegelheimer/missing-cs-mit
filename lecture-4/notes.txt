@@ -113,3 +113,109 @@ Regular Expressions ('disconnected from' piece in example above)
 This ^ is was a very complicated regular expression.
 
 In these situations, regular expression debuggers come in handy (e.g. regex101.com)
+  - explains what they each handle using test string
+
+Often using these for one-off, not necessarily 'perfect' (regarding handling potential cases)
+
+
+Other tools
+  'wc' (wordcount) -l ($ of lines)
+  'sort' (sort data)
+  'uniq' (look at sorted listed lines, only print those that are unique) -c (count number of duplicates)
+  'sort'
+    -n (numberic sort)
+    -k (select whitespace column separate from input to sort by)
+    1,1 (start at first col, stop at first col)
+  'tail' (last -n<number> lines)
+
+$ history | sort | uniq -c | sort -nk1,1 | tail -n10
+
+Recommendation --> quick disabling of root for ssh logging
+
+
+More comprehensive use cases...
+  - don't care about counts, only want .csv of usernames (to send to oneself by email every day)
+
+awk   - column based text editor (sed is mostly for editing)
+      - by default will parse input by whitespace separated columns
+      - '$2' means take second column
+paste - takes a bunch of lines
+      - '-s' pastes into single line together
+      - '-d,' delimits with comma
+
+$ <data> | sed -E <regex> | sort | uniq -c | sort -nk1,1 | tail -n20 | awk '{print $2}' | paste -sd,
+
+
+-- this took f'n forever (probably have an older version of 'paste') --
+$ cat ssh.log |
+  sed -E 's/^.*Disconnected from (invalid |authenticating )?user (.*) [0-9.]+ port [0-9]+( \[preauth\])?$/\2/' |
+  sort |
+  uniq -c |
+  sort -nk1,1 |
+  awk '{print $2}' > tmp.txt |
+  paste -sd, tmp.txt > tmp.csv |
+  rm tmp.txt
+
+
+Awk (in a bit more depth)
+  - very powerful programming language for this type of data wrangling
+
+  *edit to awk above
+
+  # all the usernames that... start with a c
+                              end with an e
+                              show up once in the 'log'
+  $ ... |
+    awk '$1 == 1 && $2 ~ /^c.*e$/ {print $0}'
+
+  ** the rest of this particular section was basically unnecessary **
+  (summary - you can handle more in awk, but very painful to do so)
+
+
+Other tools
+  'bc'    - command line calculator that reads from stdin
+
+  $ echo "1 + 2" | bc -l
+  3
+
+  # example: line separated numbers piped to paste, turned into mathematical
+  #          expression and use 'bc -l' to calculate
+  $ <list of numbers from some overly complex expression> | paste -sd+ | bc -l
+  <total>
+
+
+
+Finale - 2 'Special' Types of Data Wrangling
+
+1. Command Line Argument Wrangling
+
+  'xargs'    - takes lines of input and turns them into arguments
+
+  # rust-vers.log
+  'stable-x86_64-unknown-linux-gnu (default)'
+  'beta-x86_64-unknown-linux-gnu'
+  'nightly-2019-03-06-x86_64-unknown-linux-gnu'
+  'nightly-2019-03-06-x86_64-unknown-linux-gnu'
+  'nightly-2019-03-06-x86_64-unknown-linux-gnu'
+  'nightly-2019-03-06-x86_64-unknown-linux-gnu'
+  'nightly-2019-03-06-x86_64-unknown-linux-gnu'
+  '1.47.0-x86_64-unknown-linux-gnu'
+
+
+
+  # '-v'    - don't match
+
+  $ cat rust-vers.log | grep -v nightly
+
+
+2. Wrangling Binary Data (videos/images)
+  # capture an image from our camera
+  # convert to grayscale, compress it
+  # send it to a remote machine over SSH
+  # decompress it there, make a copy, display
+  $ ffmpeg -loglevel panic -i /dev/video0 -frames 1 -f image2 - |
+    convert - -colorspace gray - |
+    gzip |
+    ssh mymachine 'gzip -d |
+    tee copy.jpg |
+    env DISPLAY=:0 feh -'
