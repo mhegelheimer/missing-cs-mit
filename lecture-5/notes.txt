@@ -1,0 +1,81 @@
+
+
+Title: Command Line Environment
+
+Topics
+ - Job Control
+ - Terminal Multiplexers
+ - Dot Files
+ - Remote Machines (work efficiently)
+
+
+Job Control
+
+So far we've been using the shell in a very 'mono'-command way.  We haven't
+yet discussed how to run several things or stop the execution of a program.
+
+Example:
+
+  # terminal sends SIGINT signal for the program to stop interrupt execution
+  $ sleep 20
+  ^C
+
+  $ man signal
+
+  Important Singals
+    SIGINT    - interrupt program
+    SIGQUIT   - quit program
+
+    SIGKILL (cannot be captured by a program)
+
+    Start     - ^Q
+    Stop      - ^S
+
+
+  Example
+    # '&' -
+    $ nohup sleep 2000 &
+
+    $ jobs
+    $ kill %1
+    $ kill -STOP %1
+
+fg - foreground
+bg - background
+
+
+
+Terminal Multiplexer (more convenient solution to terminal tabs)
+
+    Allows you
+      - to create different 'workspaces' that you can work in
+      - rearrange environment with different sessions
+      - older version is called 'screen'
+
+
+    TMUX Hierarchy
+      Sessions > Windows (tabs) > Panes
+
+      # detatch from session
+      $ tmux
+      ^V
+
+      # re-attach to session
+      $ tmux -a
+
+*various tmux commands (see lecture notes: https://missing.csail.mit.edu/2020/command-line/)
+
+Alias
+
+Symlinks
+
+
+Working with remote machines (using ssh)
+
+  using ssh keys instead of using password (ssh-keygen )
+
+
+scp     - remote copy
+rsync   - copy a lot of files
+
+htop
